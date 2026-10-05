@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Speedometer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="dash" class="hidden">
+    <!-- Shift light bar -->
+    <div id="shiftbar"></div>
+
+    <!-- Panel kiri & kanan (diisi oleh script.js) -->
+    <div class="panel left" id="panel-left"></div>
+    <div class="panel right" id="panel-right"></div>
+
+    <!-- Tachometer -->
+    <svg id="tach" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="150" cy="150" r="148" fill="#0b0b0b" stroke="#222" stroke-width="2"/>
+      <circle cx="150" cy="150" r="140" fill="#f2d21b"/>
+      <path id="redzone" fill="#d9262c"/>
+      <g id="ticks"></g>
+      <g id="numbers"></g>
+      <circle cx="150" cy="150" r="66" fill="#080808" stroke="#161616" stroke-width="3"/>
+      <circle cx="150" cy="150" r="60" fill="none" stroke="#f2d21b" stroke-width="1.5" stroke-dasharray="2 3"/>
+      <g id="needle">
+        <polygon points="147,172 153,172 151.2,34 148.8,34" fill="#e0262c"/>
+        <circle cx="150" cy="150" r="7" fill="#e0262c"/>
+        <circle cx="150" cy="150" r="3" fill="#111"/>
+      </g>
+    </svg>
+
+    <!-- Teks tengah tachometer -->
+    <div id="center-label">
+      <div class="brand">JGVRP</div>
+      <div class="warnings">
+        <span id="w-eng"  class="warn">ENG</span>
+        <span id="w-fuel" class="warn">FUEL</span>
+        <span id="w-lgt"  class="warn">LGT</span>
+      </div>
+    </div>
+
+    <!-- Kotak gear / speed / rpm -->
+    <div id="box-gear" class="box"><span id="gear" class="big">N</span><small>GEAR</small></div>
+    <div id="box-speed" class="box"><span id="speed" class="big">0</span><small id="speed-unit">SPEED KPH</small></div>
+    <div id="box-rpm" class="box"><span id="rpm" class="mid">0</span><small>RPM</small></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

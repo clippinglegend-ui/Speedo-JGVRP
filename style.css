@@ -1,0 +1,202 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  font-family: 'Bahnschrift', 'DIN Alternate', 'Arial Narrow', 'Segoe UI', sans-serif;
+  user-select: none;
+}
+
+:root {
+  --s: 0.55;            /* skala dashboard, bisa diubah lewat ?scale=0.7 */
+  --yellow: #f2d21b;
+  --red: #d9262c;
+}
+
+#dash {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 800px;
+  height: 424px;
+  background: linear-gradient(160deg, #141414, #060606);
+  border: 3px solid #2a2a2a;
+  border-radius: 18px;
+  box-shadow: 0 0 0 4px #0c0c0c, 0 10px 40px rgba(0, 0, 0, .7);
+  transform: scale(var(--s));
+  transform-origin: bottom right;
+  transition: opacity .25s;
+}
+#dash.hidden { opacity: 0; pointer-events: none; }
+#dash.pos-bl { right: auto; left: 20px; transform-origin: bottom left; }
+#dash.pos-center { right: 50%; margin-right: -400px; }
+
+/* ---------- Shift light bar ---------- */
+#shiftbar {
+  position: absolute;
+  top: 10px; left: 24px; right: 24px;
+  height: 10px;
+  display: flex;
+  gap: 5px;
+}
+#shiftbar .led {
+  flex: 1;
+  border-radius: 3px;
+  background: #1c1c1c;
+  transition: background .05s, box-shadow .05s;
+}
+#shiftbar .led.on { box-shadow: 0 0 8px currentColor; background: currentColor; }
+#shiftbar.flash .led.on { animation: blink .12s steps(1) infinite; }
+@keyframes blink { 50% { background: #1c1c1c; box-shadow: none; } }
+
+/* ---------- Panel samping ---------- */
+.panel {
+  position: absolute;
+  top: 34px;
+  width: 215px;
+  height: 376px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.panel.left  { left: 12px; }
+.panel.right { right: 12px; }
+
+.gauge {
+  position: relative;
+  flex: 1;
+  background: linear-gradient(180deg, #232323, #121212);
+  border-radius: 6px;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+.panel.right .gauge { flex-direction: row-reverse; }
+
+.gauge .bar {
+  position: relative;
+  width: 38px;
+  background: #1a1a1a;
+  margin: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.gauge .bar .fill {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 0%;
+  background: var(--yellow);
+  transition: height .12s linear;
+}
+.gauge .bar::after {            /* efek segmen */
+  content: "";
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(to top, transparent 0 7px, #121212 7px 9px);
+}
+.gauge .info {
+  flex: 1;
+  padding: 8px 8px 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.panel.left  .info { text-align: right; }
+.panel.right .info { text-align: left; }
+
+.gauge .value {
+  font-size: 44px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--yellow);
+  line-height: 1;
+  letter-spacing: -1px;
+}
+.gauge .value small {
+  font-size: 17px;
+  margin-left: 3px;
+  color: #fff;
+  letter-spacing: 0;
+}
+.gauge .label {
+  margin-top: 6px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #b9b9b9;
+  text-transform: uppercase;
+}
+.gauge.alert .value { color: #ff4a4a; }
+.gauge.alert .fill  { background: #ff3b3b; }
+
+/* ---------- Tachometer ---------- */
+#tach {
+  position: absolute;
+  left: 235px; top: 57px;
+  width: 330px; height: 330px;
+}
+#tach text {
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 30px;
+  fill: #101010;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+#needle { transform-origin: 150px 150px; }
+
+#center-label {
+  position: absolute;
+  left: 235px; top: 57px;
+  width: 330px; height: 330px;
+  pointer-events: none;
+}
+#center-label .brand {
+  position: absolute;
+  left: 0; right: 0; top: 122px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 3px;
+  color: #eee;
+}
+#center-label .warnings {
+  position: absolute;
+  left: 112px; top: 168px;
+  display: flex; gap: 4px;
+}
+.warn {
+  font-size: 9px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  background: #1c1c1c;
+  color: #3a3a3a;
+  font-weight: 700;
+}
+.warn.on { background: #ff3b3b; color: #fff; box-shadow: 0 0 8px #ff3b3b; }
+#w-lgt.on { background: #2f8cff; box-shadow: 0 0 8px #2f8cff; }
+
+/* ---------- Kotak gear / speed / rpm ---------- */
+.box {
+  position: absolute;
+  background: #0a0a0a;
+  border: 2px solid #3a3a3a;
+  border-radius: 5px;
+  color: #fff;
+  text-align: center;
+  font-weight: 700;
+}
+.box small {
+  display: block;
+  font-size: 9px;
+  color: #aaa;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+.box .big { display: block; font-size: 34px; line-height: 1.05; margin-top: 2px; }
+.box .mid { display: block; font-size: 17px; line-height: 1.2; }
+
+#box-gear  { left: 436px; top: 290px; width: 46px; height: 58px; }
+#box-speed { left: 488px; top: 290px; width: 80px; height: 58px; }
+#box-rpm   { left: 436px; top: 352px; width: 60px; height: 34px; }
